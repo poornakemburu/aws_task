@@ -1,6 +1,0 @@
-name: aws_task
-build_projects_mapping:
-  nodejs: app
-lambdas:
-  hello_world:
-    runtime: nodejs
