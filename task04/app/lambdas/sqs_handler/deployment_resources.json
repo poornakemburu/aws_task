@@ -3,26 +3,9 @@
     "predefined_policies": [],
     "principal_service": "lambda",
     "custom_policies": [
-      "lambda-sqs-execution"
+      "lambda-basic-execution"
     ],
     "resource_type": "iam_role",
     "tags": {}
-  },
-  "lambda-sqs-execution": {
-    "resource_type": "iam_policy",
-    "policy_content": {
-      "Version": "2012-10-17",
-      "Statement": [
-        {
-          "Effect": "Allow",
-          "Action": [
-            "sqs:ReceiveMessage",
-            "sqs:DeleteMessage",
-            "sqs:GetQueueAttributes"
-          ],
-          "Resource": "*"
-        }
-      ]
-    }
   }
 }
