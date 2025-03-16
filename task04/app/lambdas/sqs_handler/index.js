@@ -1,4 +1,5 @@
 exports.handler = async (event) => {
+    // TODO implement
     console.log("SQS Event Received:", JSON.stringify(event, null, 2));
 
         event.Records.forEach(record => {
