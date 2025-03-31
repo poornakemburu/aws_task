@@ -3,7 +3,7 @@ const axios = require("axios");
 const { v4: uuidv4 } = require("uuid");
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
-const TABLE_NAME = process.env.TARGET_TABLE || "Weather";
+const TABLE_NAME = process.env.TARGET_TABLE;
 
 async function fetchWeather() {
     const url = "https://api.open-meteo.com/v1/forecast?latitude=50.4375&longitude=30.5&hourly=temperature_2m";
