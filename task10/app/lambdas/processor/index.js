@@ -1,8 +1,7 @@
-// Import required dependencies
-const { DynamoDB } = require("aws-sdk");
+const AWS = require("aws-sdk");
 const axios = require("axios");
+const { v4: uuidv4 } = require("uuid");
 
-// Create DynamoDB client
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const TABLE_NAME = process.env.TARGET_TABLE || "Weather";
 
@@ -25,9 +24,8 @@ exports.handler = async (event) => {
 
         const weatherData = await fetchWeather();
 
-        // IMPORTANT: Use fixed ID that matches expected value
         const item = {
-            id: "1b472527-d5d1-4aea-84c7-328a508d3cb5", // Fixed ID as expected
+            id: uuidv4(),
             forecast: {
                 latitude: weatherData.latitude,
                 longitude: weatherData.longitude,
@@ -36,14 +34,8 @@ exports.handler = async (event) => {
                 timezone: weatherData.timezone,
                 timezone_abbreviation: weatherData.timezone_abbreviation,
                 elevation: weatherData.elevation,
-                hourly_units: {
-                    time: "iso8601",
-                    temperature_2m: "°C"
-                },
-                hourly: {
-                    time: weatherData.hourly.time,
-                    temperature_2m: weatherData.hourly.temperature_2m
-                }
+                hourly_units: weatherData.hourly_units,
+                hourly: weatherData.hourly
             }
         };
 
@@ -52,9 +44,12 @@ exports.handler = async (event) => {
         await dynamoDB.put({
             TableName: TABLE_NAME,
             Item: item
-        }).promise();
-
-        console.log("Successfully inserted item into DynamoDB");
+        }).promise().then(() => {
+            console.log("Successfully inserted item into DynamoDB");
+        }).catch(err => {
+            console.error("DynamoDB put error:", err);
+            throw new Error("Failed to store data in DynamoDB");
+        });
 
         return {
             statusCode: 200,
